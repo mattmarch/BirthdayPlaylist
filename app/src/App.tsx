@@ -9,7 +9,7 @@ import {
 import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
 
-function App() {
+const App = () => {
   const [birthdayDate, setBirthdayDate] = useState(new Date());
   const [chartData, setChartData] = useState<ChartData | null>(null);
   const [
@@ -26,6 +26,7 @@ function App() {
 
   return (
     <div className="App">
+      <h1>Birthday Playlist Generator</h1>
       <p>
         Generate a Spotify playlist of UK number ones on your Birthday since you
         were born.
@@ -53,8 +54,31 @@ function App() {
       >
         Find me a playlist
       </button>
+      {birthdayNumberOnes && (
+        <div>
+          <p>Spotify integration coming soon!</p>
+          <NumberOnesList birthdayNumberOnes={birthdayNumberOnes} />
+        </div>
+      )}
     </div>
   );
-}
+};
+
+const NumberOnesList = (props: { birthdayNumberOnes: BirthdayNumberOnes }) => (
+  <div>
+    {props.birthdayNumberOnes.map((birthdayEntry) => (
+      <div key={birthdayEntry.date.toLocaleString()}>
+        <h4>{birthdayEntry.date.toLocaleString()}</h4>
+        {birthdayEntry.numberOne ? (
+          <p>
+            {birthdayEntry.numberOne.title} by {birthdayEntry.numberOne.artist}
+          </p>
+        ) : (
+          <p>UK Charts only started on 14/11/1952</p>
+        )}
+      </div>
+    ))}
+  </div>
+);
 
 export default App;

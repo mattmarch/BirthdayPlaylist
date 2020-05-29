@@ -9,7 +9,7 @@ type IncomingChartEntry = {
   artist: string;
 };
 
-export type ChartEntry = {
+export interface ChartEntry {
   startDate: DateTime;
   title: string;
   artist: string;
@@ -32,13 +32,8 @@ export type BirthdayNumberOnes = Array<Birthday>;
 
 export type Birthday = {
   date: DateTime;
-  numberOne: ChartEntry | NoData;
+  numberOne: ChartEntry | null;
 };
-
-enum NoData {
-  DatePreCharts,
-  LackingCurrentData,
-}
 
 export const findBirthdayNumberOnes = (
   birthdayDate: Date,
@@ -57,7 +52,7 @@ const findBirthdayNumberOne = (
     (entry) => entry.startDate <= birthday
   );
   if (chartEntryBeforeBirthday === undefined) {
-    return { date: birthday, numberOne: NoData.DatePreCharts };
+    return { date: birthday, numberOne: null };
   } else {
     return { date: birthday, numberOne: chartEntryBeforeBirthday };
   }
