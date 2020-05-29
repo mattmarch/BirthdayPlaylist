@@ -86,6 +86,7 @@ const AppContainer = styled.div`
   display: flex;
   flex-direction: column;
   align-items: center;
+  padding: 20px;
 `;
 
 const SubmitButton = styled.button`
