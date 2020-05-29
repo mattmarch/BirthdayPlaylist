@@ -24,6 +24,7 @@ jobs:
     - name: Build
       run: |
         cd app
+        yarn
         yarn build
 
     # Deploy as per https://github.com/marketplace/actions/deploy-to-github-pages
