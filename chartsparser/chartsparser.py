@@ -11,12 +11,13 @@ def parse_official_charts(url: str):
     entries = []
     for table in chart_page_soup.find_all('table')[1:]:     # Ignore first table
         for row in table.find_all('tr')[1:]:        # Ignore header row
-            [start_date, title, artist, _weeks] = [cell.get_text() for cell in row.find_all('td')]
+            [start_date, title, artist, weeks] = [cell.get_text() for cell in row.find_all('td')]
             iso_date = datetime.datetime.strptime(start_date, '%d/%m/%Y').isoformat()
             entry = {
                 'start_date': iso_date, 
                 'title': title,
-                'artist': artist
+                'artist': artist,
+                'weeks_at_number_one': weeks
             }
             entries.append(entry)
     return entries
