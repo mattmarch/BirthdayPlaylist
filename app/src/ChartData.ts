@@ -1,7 +1,7 @@
 import { findLast } from "lodash";
 import { DateTime, Interval } from "luxon";
 
-const JsonBinUrl = "https://api.jsonbin.io/b/5ed4c6a37741ef56a565d552";
+const JsonBinUrl = "https://api.jsonbin.io/b/5ecfe1657741ef56a5638007/latest";
 
 type IncomingChartEntry = {
   first_week_ending_date: string;
