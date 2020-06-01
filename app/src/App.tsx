@@ -5,6 +5,7 @@ import {
   ChartData,
   findBirthdayNumberOnes,
   BirthdayNumberOnes,
+  NoDataReason,
 } from "./ChartData";
 import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
@@ -74,8 +75,10 @@ const NumberOnesList = (props: { birthdayNumberOnes: BirthdayNumberOnes }) => (
           <p>
             {birthdayEntry.numberOne.title} by {birthdayEntry.numberOne.artist}
           </p>
-        ) : (
+        ) : birthdayEntry.reason === NoDataReason.DATE_TOO_OLD ? (
           <p>UK Charts only started on 14/11/1952</p>
+        ) : (
+          <p>The latest chart data hasn't been updated yet, try again soon!</p>
         )}
       </Result>
     ))}

@@ -1,18 +1,20 @@
 import { findLast } from "lodash";
 import { DateTime, Interval } from "luxon";
 
-const JsonBinUrl = "https://api.jsonbin.io/b/5ecfe1657741ef56a5638007/latest";
+const JsonBinUrl = "https://api.jsonbin.io/b/5ed4c6a37741ef56a565d552";
 
 type IncomingChartEntry = {
   first_week_ending_date: string;
   title: string;
   artist: string;
+  weeks_at_number_one: string;
 };
 
 export interface ChartEntry {
   firstWeekEndDate: DateTime;
   title: string;
   artist: string;
+  weeksAtNumberOne: number;
 }
 
 export type ChartData = Array<ChartEntry>;
@@ -25,6 +27,7 @@ export const getChartData: () => Promise<ChartData> = () =>
         firstWeekEndDate: DateTime.fromISO(entry.first_week_ending_date),
         title: entry.title,
         artist: entry.artist,
+        weeksAtNumberOne: Number(entry.weeks_at_number_one),
       }))
     );
 
@@ -33,7 +36,13 @@ export type BirthdayNumberOnes = Array<Birthday>;
 export type Birthday = {
   date: DateTime;
   numberOne: ChartEntry | null;
+  reason: NoDataReason | null;
 };
+
+export enum NoDataReason {
+  NO_DATA_YET,
+  DATE_TOO_OLD
+}
 
 export const findBirthdayNumberOnes = (
   birthdayDate: Date,
@@ -49,11 +58,13 @@ const findBirthdayNumberOne = (
 ): Birthday => {
   const chartEntryBeforeBirthday = findLast(
     chartData,
-    (entry) => entry.firstWeekEndDate.minus({ days: 7 }) <= birthday // Date is first week end, so subtract 7 days to get beginning
+    (entry) => entry.firstWeekEndDate.minus({ weeks: 1 }) <= birthday // Date is first week end, so subtract 1 week to get beginning
   );
   if (chartEntryBeforeBirthday === undefined) {
-    return { date: birthday, numberOne: null };
+    return { date: birthday, numberOne: null, reason: NoDataReason.DATE_TOO_OLD };
+  } else if (birthday >= chartEntryBeforeBirthday.firstWeekEndDate.plus({ weeks: chartEntryBeforeBirthday.weeksAtNumberOne - 1 })) {
+    return { date: birthday, numberOne: null, reason: NoDataReason.NO_DATA_YET }
   } else {
-    return { date: birthday, numberOne: chartEntryBeforeBirthday };
+    return { date: birthday, numberOne: chartEntryBeforeBirthday, reason: null };
   }
 };
