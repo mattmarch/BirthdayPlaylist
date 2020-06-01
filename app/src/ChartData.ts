@@ -1,19 +1,19 @@
 import { findLast } from "lodash";
 import { DateTime, Interval } from "luxon";
 
-const JsonBinUrl = "https://api.jsonbin.io/b/5ecfe1657741ef56a5638007";
+const JsonBinUrl = "https://api.jsonbin.io/b/5ecfe1657741ef56a5638007/latest";
 
 type IncomingChartEntry = {
-  start_date: string;
+  first_week_ending_date: string;
   title: string;
   artist: string;
 };
 
 export interface ChartEntry {
-  startDate: DateTime;
+  firstWeekEndDate: DateTime;
   title: string;
   artist: string;
-};
+}
 
 export type ChartData = Array<ChartEntry>;
 
@@ -22,7 +22,7 @@ export const getChartData: () => Promise<ChartData> = () =>
     .then((response) => response.json())
     .then((incomingEntries) =>
       incomingEntries.map((entry: IncomingChartEntry) => ({
-        startDate: DateTime.fromISO(entry.start_date),
+        firstWeekEndDate: DateTime.fromISO(entry.first_week_ending_date),
         title: entry.title,
         artist: entry.artist,
       }))
@@ -49,7 +49,7 @@ const findBirthdayNumberOne = (
 ): Birthday => {
   const chartEntryBeforeBirthday = findLast(
     chartData,
-    (entry) => entry.startDate <= birthday
+    (entry) => entry.firstWeekEndDate.minus({ days: 7 }) <= birthday // Date is first week end, so subtract 7 days to get beginning
   );
   if (chartEntryBeforeBirthday === undefined) {
     return { date: birthday, numberOne: null };

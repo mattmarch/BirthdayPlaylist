@@ -14,7 +14,7 @@ def parse_official_charts(url: str):
             [start_date, title, artist, weeks] = [cell.get_text() for cell in row.find_all('td')]
             iso_date = datetime.datetime.strptime(start_date, '%d/%m/%Y').isoformat()
             entry = {
-                'start_date': iso_date, 
+                'first_week_ending_date': iso_date, 
                 'title': title,
                 'artist': artist,
                 'weeks_at_number_one': weeks
