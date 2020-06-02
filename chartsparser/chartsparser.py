@@ -1,12 +1,12 @@
 from bs4 import BeautifulSoup
 import json
-import urllib.request
+import requests
 import datetime
 
 
 def parse_official_charts(url: str):
-    chart_page_html = urllib.request.urlopen(url).read()
-    chart_page_soup = BeautifulSoup(chart_page_html, 'html.parser')
+    chart_page = requests.get(url)
+    chart_page_soup = BeautifulSoup(chart_page.text, 'html.parser')
 
     entries = []
     for table in chart_page_soup.find_all('table')[1:]:     # Ignore first table
