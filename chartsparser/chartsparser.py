@@ -2,6 +2,7 @@ from bs4 import BeautifulSoup
 import json
 import requests
 import datetime
+import sys, os
 
 
 def parse_official_charts(url: str):
@@ -37,3 +38,10 @@ if __name__ == '__main__':
     verify_chart_data(entries)
     with open('charts.json', 'w') as file:
         file.write(json.dumps(entries))
+    # Optional '-u' arg to upload result to JSONBIN
+    if len(sys.argv) > 1 and '-u' in sys.argv[1:]:
+        jsonbin_url = os.environ.get('JSONBIN_URL')
+        jsonbin_key = os.environ.get('JSONBIN_KEY')
+        headers = {'Content-Type': 'application/json', 'secret-key': jsonbin_key}
+        response = requests.put(jsonbin_url, json=entries, headers=headers)
+        assert(response.status_code == 200)
