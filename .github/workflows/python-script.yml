@@ -1,0 +1,35 @@
+# This workflow will install Python dependencies, run tests and lint with a single version of Python
+# For more information see: https://help.github.com/actions/language-and-framework-guides/using-python-with-github-actions
+
+name: Python application
+
+on:
+  push:
+    branches: [ master ]
+    paths:
+      - 'chartsparser/**'
+      - '.github/workflows/python-script.yml'
+  schedule:
+    - cron: '0 2 * * 5'
+
+jobs:
+  build:
+
+    runs-on: ubuntu-latest
+
+    steps:
+    - uses: actions/checkout@v2
+    - name: Set up Python 3.8
+      uses: actions/setup-python@v2
+      with:
+        python-version: 3.8
+    - name: Install dependencies
+      run: |
+        python -m pip install --upgrade pip
+        pip install -r chartsparser/requirements.txt
+    - name: Run script
+      run: |
+        python chartsparser/chartsparser.python -u
+      env:
+        JSONBIN_URL: ${{ secrets.JSONBIN_URL }}
+        JSONBIN_KEY: ${{ secrets.JSONBIN_KEY }}
