@@ -41,7 +41,7 @@ export type Birthday = {
 
 export enum NoDataReason {
   NO_DATA_YET,
-  DATE_TOO_OLD
+  DATE_TOO_OLD,
 }
 
 export const findBirthdayNumberOnes = (
@@ -61,10 +61,27 @@ const findBirthdayNumberOne = (
     (entry) => entry.firstWeekEndDate.minus({ weeks: 1 }) <= birthday // Date is first week end, so subtract 1 week to get beginning
   );
   if (chartEntryBeforeBirthday === undefined) {
-    return { date: birthday, numberOne: null, reason: NoDataReason.DATE_TOO_OLD };
-  } else if (birthday >= chartEntryBeforeBirthday.firstWeekEndDate.plus({ weeks: chartEntryBeforeBirthday.weeksAtNumberOne - 1 })) {
-    return { date: birthday, numberOne: null, reason: NoDataReason.NO_DATA_YET }
+    return {
+      date: birthday,
+      numberOne: null,
+      reason: NoDataReason.DATE_TOO_OLD,
+    };
+  } else if (
+    birthday >=
+    chartEntryBeforeBirthday.firstWeekEndDate.plus({
+      weeks: chartEntryBeforeBirthday.weeksAtNumberOne - 1,
+    })
+  ) {
+    return {
+      date: birthday,
+      numberOne: null,
+      reason: NoDataReason.NO_DATA_YET,
+    };
   } else {
-    return { date: birthday, numberOne: chartEntryBeforeBirthday, reason: null };
+    return {
+      date: birthday,
+      numberOne: chartEntryBeforeBirthday,
+      reason: null,
+    };
   }
 };

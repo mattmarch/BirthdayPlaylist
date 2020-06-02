@@ -94,16 +94,16 @@ const AppContainer = styled.div`
 
 const SubmitButton = styled.button`
   margin: 10px;
-`
+`;
 
 const ResultsContainer = styled.div`
   display: flex;
   flex-direction: column;
   align-items: center;
-`
+`;
 
 const Result = styled.div`
   text-align: center;
-`
+`;
 
 export default App;
