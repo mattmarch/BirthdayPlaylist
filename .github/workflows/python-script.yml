@@ -29,7 +29,7 @@ jobs:
         pip install -r chartsparser/requirements.txt
     - name: Run script
       run: |
-        python chartsparser/chartsparser.python -u
+        python chartsparser/chartsparser.py -u
       env:
         JSONBIN_URL: ${{ secrets.JSONBIN_URL }}
         JSONBIN_KEY: ${{ secrets.JSONBIN_KEY }}
