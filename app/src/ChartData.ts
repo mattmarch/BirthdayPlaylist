@@ -67,9 +67,10 @@ export const findBirthdayNumberOne = (
       reason: NoDataReason.DATE_TOO_OLD,
     };
   } else if (
-    birthday >
+    birthday >=
     chartEntryBeforeBirthday.firstWeekEndDate.plus({
-      weeks: chartEntryBeforeBirthday.weeksAtNumberOne - 1,
+      weeks: chartEntryBeforeBirthday.weeksAtNumberOne,
+      days: -6,
     })
   ) {
     return {

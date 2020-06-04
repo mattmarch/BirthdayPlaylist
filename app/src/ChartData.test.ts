@@ -26,7 +26,7 @@ const singleEntryMultipleWeeks: ChartData = [
 ];
 
 test("findBirthdayNumberOnes returns DATE_TOO_OLD if birthday much before earliest chart", () => {
-  const muchBeforeChartStart = DateTime.fromISO("1950-01-01");
+  const muchBeforeChartStart = DateTime.fromISO("1950-01-01T00:00");
   expect(
     findBirthdayNumberOne(muchBeforeChartStart, singleEntryOneWeek)
   ).toStrictEqual({
@@ -37,7 +37,7 @@ test("findBirthdayNumberOnes returns DATE_TOO_OLD if birthday much before earlie
 });
 
 test("findBirthdayNumberOnes returns DATE_TOO_OLD if birthday one day before earliest chart", () => {
-  const oneDayBeforeChartStart = DateTime.fromISO("1952-11-07");
+  const oneDayBeforeChartStart = DateTime.fromISO("1952-11-07T23:59");
   expect(
     findBirthdayNumberOne(oneDayBeforeChartStart, singleEntryOneWeek)
   ).toStrictEqual({
@@ -48,7 +48,7 @@ test("findBirthdayNumberOnes returns DATE_TOO_OLD if birthday one day before ear
 });
 
 test("findBirthdayNumberOnes returns song on first day of chart", () => {
-  const firstDayOfChart = DateTime.fromISO("1952-11-08");
+  const firstDayOfChart = DateTime.fromISO("1952-11-08T00:00");
   expect(
     findBirthdayNumberOne(firstDayOfChart, singleEntryOneWeek)
   ).toStrictEqual({
@@ -59,7 +59,7 @@ test("findBirthdayNumberOnes returns song on first day of chart", () => {
 });
 
 test("findBirthdayNumberOnes returns NO_DATA_YET after last day of chart", () => {
-  const afterLastDayOfChart = DateTime.fromISO("1952-11-15");
+  const afterLastDayOfChart = DateTime.fromISO("1952-11-15T00:00");
   expect(
     findBirthdayNumberOne(afterLastDayOfChart, singleEntryOneWeek)
   ).toStrictEqual({
@@ -70,7 +70,7 @@ test("findBirthdayNumberOnes returns NO_DATA_YET after last day of chart", () =>
 });
 
 test("findBirthdayNumberOnes returns song on last day of chart", () => {
-  const lastDayOfChart = DateTime.fromISO("1952-11-14");
+  const lastDayOfChart = DateTime.fromISO("1952-11-14T09:00");
   expect(
     findBirthdayNumberOne(lastDayOfChart, singleEntryOneWeek)
   ).toStrictEqual({
@@ -81,7 +81,7 @@ test("findBirthdayNumberOnes returns song on last day of chart", () => {
 });
 
 test("findBirthdayNumberOnes returns song on last day of chart with multiple weeks", () => {
-  const lastDayOfChart = DateTime.fromISO("1953-01-09");
+  const lastDayOfChart = DateTime.fromISO("1953-01-09T09:00");
   expect(
     findBirthdayNumberOne(lastDayOfChart, singleEntryMultipleWeeks)
   ).toStrictEqual({
@@ -92,7 +92,7 @@ test("findBirthdayNumberOnes returns song on last day of chart with multiple wee
 });
 
 test("findBirthdayNumberOnes returns NO_DATA_YET after last day of chart with multiple weeks", () => {
-  const lastDayOfChart = DateTime.fromISO("1953-01-10");
+  const lastDayOfChart = DateTime.fromISO("1953-01-10T00:00");
   expect(
     findBirthdayNumberOne(lastDayOfChart, singleEntryMultipleWeeks)
   ).toStrictEqual({
