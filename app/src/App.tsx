@@ -58,7 +58,9 @@ const App = () => {
       </SubmitButton>
       {birthdayNumberOnes && (
         <ResultsContainer>
-          <p>Spotify integration coming soon!</p>
+          <a href="https://accounts.spotify.com/authorize?client_id=6c0a042391fa42e8ac96a5eed4306dfe&redirect_uri=http:%2F%2Flocalhost:3000&scope=playlist-modify-public&response_type=token&state=123">
+            Connect with Spotify for more track information and the option to automatically create a playlist.
+          </a>
           <NumberOnesList birthdayNumberOnes={birthdayNumberOnes} />
         </ResultsContainer>
       )}
