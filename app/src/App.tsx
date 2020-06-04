@@ -76,7 +76,7 @@ const NumberOnesList = (props: { birthdayNumberOnes: BirthdayNumberOnes }) => (
             {birthdayEntry.numberOne.title} by {birthdayEntry.numberOne.artist}
           </p>
         ) : birthdayEntry.reason === NoDataReason.DATE_TOO_OLD ? (
-          <p>UK Charts only started on 14/11/1952</p>
+          <p>UK Charts only started on 08/11/1952</p>
         ) : (
           <p>The latest chart data hasn't been updated yet, try again soon!</p>
         )}
