@@ -67,11 +67,14 @@ export const findBirthdayNumberOne = (
       reason: NoDataReason.DATE_TOO_OLD,
     };
   } else if (
+    // if entry is final entry
+    chartEntryBeforeBirthday === chartData[chartData.length - 1] &&
+    // and birthday is past chart start plus weeks at number one
     birthday >=
-    chartEntryBeforeBirthday.firstWeekEndDate.plus({
-      weeks: chartEntryBeforeBirthday.weeksAtNumberOne,
-      days: -6,
-    })
+      chartEntryBeforeBirthday.firstWeekEndDate.plus({
+        weeks: chartEntryBeforeBirthday.weeksAtNumberOne,
+        days: -6,
+      })
   ) {
     return {
       date: birthday,
