@@ -52,13 +52,13 @@ export const findBirthdayNumberOnes = (
     .splitBy({ years: 1 })
     .map((interval) => findBirthdayNumberOne(interval.start, chartData));
 
-const findBirthdayNumberOne = (
+export const findBirthdayNumberOne = (
   birthday: DateTime,
   chartData: ChartData
 ): Birthday => {
   const chartEntryBeforeBirthday = findLast(
     chartData,
-    (entry) => entry.firstWeekEndDate.minus({ weeks: 1 }) <= birthday // Date is first week end, so subtract 1 week to get beginning
+    (entry) => entry.firstWeekEndDate.minus({ days: 6 }) <= birthday // Date is last day of first week, so subtract 6 days to get beginning
   );
   if (chartEntryBeforeBirthday === undefined) {
     return {
@@ -67,7 +67,7 @@ const findBirthdayNumberOne = (
       reason: NoDataReason.DATE_TOO_OLD,
     };
   } else if (
-    birthday >=
+    birthday >
     chartEntryBeforeBirthday.firstWeekEndDate.plus({
       weeks: chartEntryBeforeBirthday.weeksAtNumberOne - 1,
     })
