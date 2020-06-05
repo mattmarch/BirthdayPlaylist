@@ -39,9 +39,9 @@ const searchTrack = async (
   artist: string,
   accessToken: string
 ): Promise<SpotifyTrack | null> => {
-  const firstArtist = artist.split("FT.")[0];
+  const firstArtist = artist.split(/ FT. |\//)[0];
   const queryParameters = new URLSearchParams({
-    q: `track:"${title}" artist:"${firstArtist}"`,
+    q: `"${title}" "${firstArtist}"`,
     type: "track",
     limit: "1",
   });
