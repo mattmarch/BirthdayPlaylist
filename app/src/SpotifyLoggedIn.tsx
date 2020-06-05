@@ -51,6 +51,8 @@ const NumberOnesDisplay = (props: {
   );
   return (
     <CenteredContainer>
+      <p>You are now logged in with Spotify.</p>
+      <p>The ability to generate a playlist is coming soon!</p>
       <BirthdayPicker
         selectedDate={selectedDate}
         disabled={chartData == null}
@@ -99,7 +101,7 @@ const TrackSpotifyDetails = (props: { track: SpotifyTrack }) => (
       alt={`${props.track.album.name} cover`}
     />
     <p>
-      {props.track.name} by{" "}
+      {props.track.name}<br/>
       {props.track.artists.map((artist) => artist.name).join(", ")}
     </p>
   </SpotifyTrackInfo>

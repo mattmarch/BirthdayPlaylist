@@ -14,14 +14,13 @@ import { SpotifyAuthUrl } from "./Spotify";
 const Home = () => {
   const [selectedDate, setSelectedDate] = useState<Date | null>(null);
   const chartData = useChartData();
-  const birthdayNumberOnes = chartData != null && selectedDate != null ? findBirthdayNumberOnes(selectedDate, chartData) : null;
+  const birthdayNumberOnes =
+    chartData != null && selectedDate != null
+      ? findBirthdayNumberOnes(selectedDate, chartData)
+      : null;
 
   return (
     <MainLayout>
-      <p>
-        Generate a Spotify playlist of UK number ones on your Birthday since you
-        were born. This site is a work in progress.
-      </p>
       <BirthdayPicker
         disabled={chartData == null}
         onDateSelect={setSelectedDate}
