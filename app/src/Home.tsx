@@ -12,18 +12,9 @@ import MainLayout, { CenteredContainer } from "./shared/MainLayout";
 import { SpotifyAuthUrl } from "./Spotify";
 
 const Home = () => {
-  const [selectedDate, setSelectedDate] = useState<Date>(new Date());
+  const [selectedDate, setSelectedDate] = useState<Date | null>(null);
   const chartData = useChartData();
-  const [
-    birthdayNumberOnes,
-    setBirthdayNumberOnes,
-  ] = useState<BirthdayNumberOnes | null>(null);
-
-  const updateSelectedDate = (date: Date) => {
-    setSelectedDate(date);
-    chartData != null &&
-      setBirthdayNumberOnes(findBirthdayNumberOnes(date, chartData));
-  };
+  const birthdayNumberOnes = chartData != null && selectedDate != null ? findBirthdayNumberOnes(selectedDate, chartData) : null;
 
   return (
     <MainLayout>
@@ -32,11 +23,10 @@ const Home = () => {
         were born. This site is a work in progress.
       </p>
       <BirthdayPicker
-        selectedDate={selectedDate}
         disabled={chartData == null}
-        onDateSelect={updateSelectedDate}
+        onDateSelect={setSelectedDate}
       />
-      {birthdayNumberOnes && (
+      {birthdayNumberOnes && selectedDate && (
         <CenteredContainer>
           <a href={SpotifyAuthUrl(selectedDate.toISOString())}>
             Connect with Spotify for more track information and the option to

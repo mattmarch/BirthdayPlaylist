@@ -2,8 +2,14 @@ import React, { useState } from "react";
 import { useLocation } from "react-router-dom";
 import { SpotifyAuthUrl } from "./Spotify";
 import MainLayout, { CenteredContainer } from "./shared/MainLayout";
-import { useChartData } from "./ChartData";
+import {
+  useChartData,
+  findBirthdayNumberOnes,
+  BirthdayNumberOnes,
+  NoDataReason,
+} from "./ChartData";
 import BirthdayPicker from "./shared/BirthdayPicker";
+import styled from "styled-components";
 
 const SpotifyLoggedIn = () => {
   const hashParams = useSpotifyHashParams();
@@ -34,26 +40,49 @@ const ErrorDisplay = (props: { error: Error }) => (
 const NumberOnesDisplay = (props: {
   callbackParams: SuccessCallbackParams;
 }) => {
-  const chartData = useChartData();
   const [selectedDate, setSelectedDate] = useState(
     new Date(props.callbackParams.state)
   );
-  const updateSelectedDate = (date: Date) => {
-    setSelectedDate(date);
-    // Update birthday number ones
-  };
+  const chartData = useChartData();
+  const birthdayNumberOnes = chartData != null ? findBirthdayNumberOnes(selectedDate, chartData) : null;
 
   return (
-    <div>
+    <CenteredContainer>
       <BirthdayPicker
         selectedDate={selectedDate}
         disabled={chartData == null}
-        onDateSelect={updateSelectedDate}
+        onDateSelect={setSelectedDate}
       />
-      <h3>Your playlist</h3>
-    </div>
+      {birthdayNumberOnes &&
+      <NumberOnesList birthdayNumberOnes={birthdayNumberOnes} />
+}
+    </CenteredContainer>
   );
 };
+
+const NumberOnesList = (props: { birthdayNumberOnes: BirthdayNumberOnes }) => (
+  <div>
+    {props.birthdayNumberOnes.map((birthdayEntry) => (
+      <Result key={birthdayEntry.date.toLocaleString()}>
+        <h4>{birthdayEntry.date.toLocaleString()}</h4>
+        {birthdayEntry.numberOne ? (
+          <p>
+            {birthdayEntry.numberOne.title} by {birthdayEntry.numberOne.artist}
+          </p>
+        ) : birthdayEntry.reason === NoDataReason.DATE_TOO_OLD ? (
+          <p>UK Charts only started on 08/11/1952</p>
+        ) : (
+          <p>The latest chart data hasn't been updated yet, try again soon!</p>
+        )}
+      </Result>
+    ))}
+  </div>
+);
+
+const Result = styled.div`
+  text-align: center;
+`;
+
 
 type SuccessCallbackParams = {
   accessToken: string;

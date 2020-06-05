@@ -2,17 +2,20 @@ import React, { FunctionComponent } from "react";
 import styled from "styled-components";
 
 const MainLayout: FunctionComponent = (props) => (
-  <CenteredContainer>
+  <PaddedCenteredContainer>
     <h1>Birthday Playlist Generator</h1>
     {props.children}
-  </CenteredContainer>
+  </PaddedCenteredContainer>
 );
 
 export const CenteredContainer = styled.div`
   display: flex;
   flex-direction: column;
   align-items: center;
-  padding: 20px;
 `;
+
+export const PaddedCenteredContainer = styled(CenteredContainer)`
+    padding: 20px;
+`
 
 export default MainLayout;
