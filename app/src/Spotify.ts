@@ -1,3 +1,6 @@
+import { useEffect, useState } from "react";
+import { Birthday, ChartData, findBirthdayNumberOnes } from "./ChartData";
+
 export const SpotifyAuthUrl = (state: string) =>
   `https://accounts.spotify.com/authorize?client_id=6c0a042391fa42e8ac96a5eed4306dfe&redirect_uri=http:%2F%2Flocalhost:3000%2Fspotify-callback&scope=playlist-modify-public&response_type=token&state=${state}`;
 
@@ -26,7 +29,12 @@ type SpotifyArtist = {
   name: string;
 };
 
-const searchTrack = (
+export type BirthdayWithSpotifyData = {
+  birthday: Birthday;
+  spotifyTrack: SpotifyTrack | null;
+};
+
+const searchTrack = async (
   title: string,
   artist: string,
   accessToken: string
@@ -37,9 +45,51 @@ const searchTrack = (
     type: "track",
     limit: "1",
   });
-  return fetch(`${SpotifySearchUrl}?${queryParameters.toString()}`, {
-    headers: { Authorization: `Bearer ${accessToken}` },
-  })
-    .then((response) => response.json())
-    .then((json) => (json.tracks.size > 0 ? json.tracks[0] : null));
+  const response = await fetch(
+    `${SpotifySearchUrl}?${queryParameters.toString()}`,
+    {
+      headers: { Authorization: `Bearer ${accessToken}` },
+    }
+  );
+  const json = await response.json();
+  return json.tracks.items.length > 0 ? json.tracks.items[0] : null;
+};
+
+export const useSpotifyData = (
+  chartData: ChartData | null,
+  selectedDate: Date,
+  token: string
+) => {
+  const [spotifyData, setSpotifyData] = useState<Array<
+    BirthdayWithSpotifyData
+  > | null>(null);
+
+  useEffect(() => {
+    if (chartData == null) {
+      return;
+    }
+    const birthdayNumberOnes = findBirthdayNumberOnes(selectedDate, chartData);
+    const fetchData = async () => {
+      const entries: Array<Promise<
+        BirthdayWithSpotifyData
+      >> = birthdayNumberOnes.map(async (birthdayEntry) => {
+        if (birthdayEntry.numberOne == null) {
+          return Promise.resolve({
+            birthday: birthdayEntry,
+            spotifyTrack: null,
+          });
+        }
+        const track = await searchTrack(
+          birthdayEntry.numberOne.title,
+          birthdayEntry.numberOne.artist,
+          token
+        );
+        return { birthday: birthdayEntry, spotifyTrack: track };
+      });
+      const data = await Promise.all(entries);
+      setSpotifyData(data);
+    };
+    fetchData();
+  }, [chartData, selectedDate, token]);
+  return spotifyData;
 };

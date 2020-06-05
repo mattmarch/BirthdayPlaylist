@@ -1,11 +1,9 @@
 import React, { useState } from "react";
 import { useLocation } from "react-router-dom";
-import { SpotifyAuthUrl } from "./Spotify";
+import { SpotifyAuthUrl, useSpotifyData, BirthdayWithSpotifyData } from "./Spotify";
 import MainLayout, { CenteredContainer } from "./shared/MainLayout";
 import {
   useChartData,
-  findBirthdayNumberOnes,
-  BirthdayNumberOnes,
   NoDataReason,
 } from "./ChartData";
 import BirthdayPicker from "./shared/BirthdayPicker";
@@ -44,8 +42,7 @@ const NumberOnesDisplay = (props: {
     new Date(props.callbackParams.state)
   );
   const chartData = useChartData();
-  const birthdayNumberOnes = chartData != null ? findBirthdayNumberOnes(selectedDate, chartData) : null;
-
+  const spotifyData = useSpotifyData(chartData, selectedDate, props.callbackParams.accessToken)
   return (
     <CenteredContainer>
       <BirthdayPicker
@@ -53,23 +50,23 @@ const NumberOnesDisplay = (props: {
         disabled={chartData == null}
         onDateSelect={setSelectedDate}
       />
-      {birthdayNumberOnes &&
-      <NumberOnesList birthdayNumberOnes={birthdayNumberOnes} />
-}
+      {spotifyData == null ? <p>Loading data from Spotify...</p> : <NumberOnesList numberOnes={spotifyData}/>}
     </CenteredContainer>
   );
 };
 
-const NumberOnesList = (props: { birthdayNumberOnes: BirthdayNumberOnes }) => (
+const NumberOnesList = (props: { numberOnes: Array<BirthdayWithSpotifyData> }) => (
   <div>
-    {props.birthdayNumberOnes.map((birthdayEntry) => (
-      <Result key={birthdayEntry.date.toLocaleString()}>
-        <h4>{birthdayEntry.date.toLocaleString()}</h4>
-        {birthdayEntry.numberOne ? (
+    {props.numberOnes.map((birthdayEntry) => (
+      <Result key={birthdayEntry.birthday.date.toLocaleString()}>
+        <h4>{birthdayEntry.birthday.date.toLocaleString()}</h4>
+        {birthdayEntry.birthday.numberOne ? (
           <p>
-            {birthdayEntry.numberOne.title} by {birthdayEntry.numberOne.artist}
+            {birthdayEntry.birthday.numberOne.title} by {birthdayEntry.birthday.numberOne.artist}
+            <br/>
+            {birthdayEntry.spotifyTrack?.uri}
           </p>
-        ) : birthdayEntry.reason === NoDataReason.DATE_TOO_OLD ? (
+        ) : birthdayEntry.birthday.reason === NoDataReason.DATE_TOO_OLD ? (
           <p>UK Charts only started on 08/11/1952</p>
         ) : (
           <p>The latest chart data hasn't been updated yet, try again soon!</p>
