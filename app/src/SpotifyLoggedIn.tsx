@@ -1,23 +1,23 @@
 import React from "react";
 import { useLocation } from "react-router-dom";
 import { SpotifyAuthUrl } from "./Spotify";
+import MainLayout, { CenteredContainer } from "./shared/MainLayout";
 
 const SpotifyLoggedIn = () => {
   const hashParams = useSpotifyHashParams();
   return (
-    <div>
-      <h1>Birthday Playlist Generator</h1>
+    <MainLayout>
       {hashParams instanceof Error ? (
         <ErrorDisplay error={hashParams} />
       ) : (
-        <TrackFeed callbackParams={hashParams} />
+        <SpotifyNumberOnes callbackParams={hashParams} />
       )}
-    </div>
+    </MainLayout>
   );
 };
 
 const ErrorDisplay = (props: { error: Error }) => (
-  <div>
+  <CenteredContainer>
     <h3>Error</h3>
     <p>An error occurred during authorization with spotify.</p>
     <a href={SpotifyAuthUrl("123")}>Click to try again.</a>
@@ -25,12 +25,11 @@ const ErrorDisplay = (props: { error: Error }) => (
       If this problem persists{" "}
       <a href="mailto:playlist@mattmarch.co.uk">let me know</a>.
     </p>
-    <h4>{props.error.name}</h4>
-    <p>{props.error.message}</p>
-  </div>
+    <p>Error reason: {props.error.message}</p>
+  </CenteredContainer>
 );
 
-const TrackFeed = (props: { callbackParams: SuccessCallbackParams }) => {
+const SpotifyNumberOnes = (props: { callbackParams: SuccessCallbackParams }) => {
   return (
     <div>
       <h3>Your playlist</h3>

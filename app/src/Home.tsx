@@ -10,6 +10,7 @@ import {
 } from "./ChartData";
 import BirthdayPicker from "./shared/BirthdayPicker";
 import { SpotifyAuthUrl } from "./Spotify";
+import MainLayout, { CenteredContainer } from "./shared/MainLayout";
 
 const Home = () => {
   const [chartData, setChartData] = useState<ChartData | null>(null);
@@ -26,8 +27,7 @@ const Home = () => {
   }, []);
 
   return (
-    <AppContainer>
-      <h1>Birthday Playlist Generator</h1>
+    <MainLayout>
       <p>
         Generate a Spotify playlist of UK number ones on your Birthday since you
         were born. This site is a work in progress.
@@ -40,15 +40,15 @@ const Home = () => {
         }
       />
       {birthdayNumberOnes && (
-        <ResultsContainer>
+        <CenteredContainer>
           <a href={SpotifyAuthUrl("123")} >
             Connect with Spotify for more track information and the option to
             automatically create a playlist.
           </a>
           <NumberOnesList birthdayNumberOnes={birthdayNumberOnes} />
-        </ResultsContainer>
+        </CenteredContainer>
       )}
-    </AppContainer>
+    </MainLayout>
   );
 };
 
@@ -70,19 +70,6 @@ const NumberOnesList = (props: { birthdayNumberOnes: BirthdayNumberOnes }) => (
     ))}
   </div>
 );
-
-const AppContainer = styled.div`
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  padding: 20px;
-`;
-
-const ResultsContainer = styled.div`
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-`;
 
 const Result = styled.div`
   text-align: center;
