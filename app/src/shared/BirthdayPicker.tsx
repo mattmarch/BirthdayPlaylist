@@ -4,11 +4,12 @@ import DatePicker from "react-datepicker";
 
 type Props = {
   disabled: boolean;
+  selectedDate: Date;
   onDateSelect: (date: Date) => void;
 };
 
 const BirthdayPicker = (props: Props) => {
-  const [birthdayDate, setBirthdayDate] = useState(new Date());
+  const [birthdayDate, setBirthdayDate] = useState(props.selectedDate);
 
   return (
     <Container>

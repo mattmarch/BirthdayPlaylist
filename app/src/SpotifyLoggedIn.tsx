@@ -1,7 +1,9 @@
-import React from "react";
+import React, { useState } from "react";
 import { useLocation } from "react-router-dom";
 import { SpotifyAuthUrl } from "./Spotify";
 import MainLayout, { CenteredContainer } from "./shared/MainLayout";
+import { useChartData } from "./ChartData";
+import BirthdayPicker from "./shared/BirthdayPicker";
 
 const SpotifyLoggedIn = () => {
   const hashParams = useSpotifyHashParams();
@@ -10,7 +12,7 @@ const SpotifyLoggedIn = () => {
       {hashParams instanceof Error ? (
         <ErrorDisplay error={hashParams} />
       ) : (
-        <SpotifyNumberOnes callbackParams={hashParams} />
+        <NumberOnesDisplay callbackParams={hashParams} />
       )}
     </MainLayout>
   );
@@ -20,7 +22,7 @@ const ErrorDisplay = (props: { error: Error }) => (
   <CenteredContainer>
     <h3>Error</h3>
     <p>An error occurred during authorization with spotify.</p>
-    <a href={SpotifyAuthUrl("123")}>Click to try again.</a>
+    <a href={SpotifyAuthUrl(new Date().toISOString())}>Click to try again.</a>
     <p>
       If this problem persists{" "}
       <a href="mailto:playlist@mattmarch.co.uk">let me know</a>.
@@ -29,9 +31,25 @@ const ErrorDisplay = (props: { error: Error }) => (
   </CenteredContainer>
 );
 
-const SpotifyNumberOnes = (props: { callbackParams: SuccessCallbackParams }) => {
+const NumberOnesDisplay = (props: {
+  callbackParams: SuccessCallbackParams;
+}) => {
+  const chartData = useChartData();
+  const [selectedDate, setSelectedDate] = useState(
+    new Date(props.callbackParams.state)
+  );
+  const updateSelectedDate = (date: Date) => {
+    setSelectedDate(date);
+    // Update birthday number ones
+  };
+
   return (
     <div>
+      <BirthdayPicker
+        selectedDate={selectedDate}
+        disabled={chartData == null}
+        onDateSelect={updateSelectedDate}
+      />
       <h3>Your playlist</h3>
     </div>
   );
