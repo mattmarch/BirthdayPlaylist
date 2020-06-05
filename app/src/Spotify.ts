@@ -7,10 +7,11 @@ export const SpotifyAuthUrl = (state: string) =>
 const SpotifyApiBaseUrl = "https://api.spotify.com/v1";
 const SpotifySearchUrl = new URL(`${SpotifyApiBaseUrl}/search`);
 
-type SpotifyTrack = {
+export type SpotifyTrack = {
   album: SpotifyAlbum;
   artists: Array<SpotifyArtist>;
   id: string;
+  name: string;
   uri: string;
 };
 

@@ -1,13 +1,15 @@
 import React, { useState } from "react";
 import { useLocation } from "react-router-dom";
-import { SpotifyAuthUrl, useSpotifyData, BirthdayWithSpotifyData } from "./Spotify";
+import styled from "styled-components";
+import { ChartEntry, NoDataReason, useChartData } from "./ChartData";
+import BirthdayPicker from "./shared/BirthdayPicker";
 import MainLayout, { CenteredContainer } from "./shared/MainLayout";
 import {
-  useChartData,
-  NoDataReason,
-} from "./ChartData";
-import BirthdayPicker from "./shared/BirthdayPicker";
-import styled from "styled-components";
+  BirthdayWithSpotifyData,
+  SpotifyAuthUrl,
+  SpotifyTrack,
+  useSpotifyData,
+} from "./Spotify";
 
 const SpotifyLoggedIn = () => {
   const hashParams = useSpotifyHashParams();
@@ -42,7 +44,11 @@ const NumberOnesDisplay = (props: {
     new Date(props.callbackParams.state)
   );
   const chartData = useChartData();
-  const spotifyData = useSpotifyData(chartData, selectedDate, props.callbackParams.accessToken)
+  const spotifyData = useSpotifyData(
+    chartData,
+    selectedDate,
+    props.callbackParams.accessToken
+  );
   return (
     <CenteredContainer>
       <BirthdayPicker
@@ -50,22 +56,28 @@ const NumberOnesDisplay = (props: {
         disabled={chartData == null}
         onDateSelect={setSelectedDate}
       />
-      {spotifyData == null ? <p>Loading data from Spotify...</p> : <NumberOnesList numberOnes={spotifyData}/>}
+      {spotifyData == null ? (
+        <p>Loading data from Spotify...</p>
+      ) : (
+        <NumberOnesList numberOnes={spotifyData} />
+      )}
     </CenteredContainer>
   );
 };
 
-const NumberOnesList = (props: { numberOnes: Array<BirthdayWithSpotifyData> }) => (
+const NumberOnesList = (props: {
+  numberOnes: Array<BirthdayWithSpotifyData>;
+}) => (
   <div>
     {props.numberOnes.map((birthdayEntry) => (
       <Result key={birthdayEntry.birthday.date.toLocaleString()}>
         <h4>{birthdayEntry.birthday.date.toLocaleString()}</h4>
         {birthdayEntry.birthday.numberOne ? (
-          <p>
-            {birthdayEntry.birthday.numberOne.title} by {birthdayEntry.birthday.numberOne.artist}
-            <br/>
-            {birthdayEntry.spotifyTrack?.uri}
-          </p>
+          birthdayEntry.spotifyTrack ? (
+            <TrackSpotifyDetails track={birthdayEntry.spotifyTrack} />
+          ) : (
+            <CouldNotFindTrack track={birthdayEntry.birthday.numberOne} />
+          )
         ) : birthdayEntry.birthday.reason === NoDataReason.DATE_TOO_OLD ? (
           <p>UK Charts only started on 08/11/1952</p>
         ) : (
@@ -80,6 +92,31 @@ const Result = styled.div`
   text-align: center;
 `;
 
+const TrackSpotifyDetails = (props: { track: SpotifyTrack }) => (
+  <SpotifyTrackInfo>
+    {/* <h5>Found on Spotify</h5> */}
+    <img
+      src={props.track.album.images.find((img) => img.height === 64)?.url}
+      alt={`${props.track.album.name} cover`}
+    />
+    <p>
+      {props.track.name} by{" "}
+      {props.track.artists.map((artist) => artist.name).join(", ")}
+    </p>
+  </SpotifyTrackInfo>
+);
+
+const SpotifyTrackInfo = styled.div`
+  align-items: center;
+  display: flex;
+  flex-direction: column;
+`;
+
+const CouldNotFindTrack = (props: { track: ChartEntry }) => (
+  <p>
+    Could not find {props.track.title} by {props.track.artist} on Spotify
+  </p>
+);
 
 type SuccessCallbackParams = {
   accessToken: string;
