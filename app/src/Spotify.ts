@@ -1,8 +1,10 @@
 import { useEffect, useState } from "react";
 import { Birthday, ChartData, findBirthdayNumberOnes } from "./ChartData";
 
-export const SpotifyAuthUrl = (state: string) =>
-  `https://accounts.spotify.com/authorize?client_id=6c0a042391fa42e8ac96a5eed4306dfe&redirect_uri=http:%2F%2Flocalhost:3000%2Fspotify-callback&scope=playlist-modify-public&response_type=token&state=${state}`;
+export const SpotifyAuthUrl = (state: string) => {
+  const callbackUrl = `${window.location.origin}/spotify-callback`
+  return `https://accounts.spotify.com/authorize?client_id=6c0a042391fa42e8ac96a5eed4306dfe&redirect_uri=${callbackUrl}&scope=playlist-modify-public&response_type=token&state=${state}`;
+}
 
 const SpotifyApiBaseUrl = "https://api.spotify.com/v1";
 const SpotifySearchUrl = new URL(`${SpotifyApiBaseUrl}/search`);

@@ -94,7 +94,6 @@ const Result = styled.div`
 
 const TrackSpotifyDetails = (props: { track: SpotifyTrack }) => (
   <SpotifyTrackInfo>
-    {/* <h5>Found on Spotify</h5> */}
     <img
       src={props.track.album.images.find((img) => img.height === 64)?.url}
       alt={`${props.track.album.name} cover`}
