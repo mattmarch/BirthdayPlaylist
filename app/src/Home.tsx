@@ -1,17 +1,16 @@
-import React, { useState, useEffect } from "react";
-import {
-  getChartData,
-  ChartData,
-  findBirthdayNumberOnes,
-  BirthdayNumberOnes,
-  NoDataReason,
-} from "./ChartData";
-import DatePicker from "react-datepicker";
+import React, { useEffect, useState } from "react";
 import "react-datepicker/dist/react-datepicker.css";
 import styled from "styled-components";
+import {
+  BirthdayNumberOnes,
+  ChartData,
+  findBirthdayNumberOnes,
+  getChartData,
+  NoDataReason,
+} from "./ChartData";
+import BirthdayPicker from "./shared/BirthdayPicker";
 
 const Home = () => {
-  const [birthdayDate, setBirthdayDate] = useState(new Date());
   const [chartData, setChartData] = useState<ChartData | null>(null);
   const [
     birthdayNumberOnes,
@@ -32,33 +31,18 @@ const Home = () => {
         Generate a Spotify playlist of UK number ones on your Birthday since you
         were born. This site is a work in progress.
       </p>
-
-      <h3>Enter your birthday below:</h3>
-      <DatePicker
-        selected={birthdayDate}
-        onChange={(date) =>
-          date ? setBirthdayDate(date) : setBirthdayDate(new Date())
-        }
-        dateFormat="dd/MM/yyyy"
-        minDate={new Date(1900, 0, 1)}
-        maxDate={new Date()}
-        showMonthDropdown
-        showYearDropdown
-        dropdownMode="select"
-      />
-      <SubmitButton
+      <BirthdayPicker
         disabled={chartData == null}
-        onClick={() =>
-          chartData &&
-          setBirthdayNumberOnes(findBirthdayNumberOnes(birthdayDate, chartData))
+        onDateSelect={(date) =>
+          chartData != null &&
+          setBirthdayNumberOnes(findBirthdayNumberOnes(date, chartData))
         }
-      >
-        Find me a playlist
-      </SubmitButton>
+      />
       {birthdayNumberOnes && (
         <ResultsContainer>
           <a href="https://accounts.spotify.com/authorize?client_id=6c0a042391fa42e8ac96a5eed4306dfe&redirect_uri=http:%2F%2Flocalhost:3000%2Fspotify-callback&scope=playlist-modify-public&response_type=token&state=123">
-            Connect with Spotify for more track information and the option to automatically create a playlist.
+            Connect with Spotify for more track information and the option to
+            automatically create a playlist.
           </a>
           <NumberOnesList birthdayNumberOnes={birthdayNumberOnes} />
         </ResultsContainer>
@@ -91,10 +75,6 @@ const AppContainer = styled.div`
   flex-direction: column;
   align-items: center;
   padding: 20px;
-`;
-
-const SubmitButton = styled.button`
-  margin: 10px;
 `;
 
 const ResultsContainer = styled.div`
