@@ -1,30 +1,22 @@
-import React, { useEffect, useState } from "react";
+import React, { useState } from "react";
 import "react-datepicker/dist/react-datepicker.css";
 import styled from "styled-components";
 import {
   BirthdayNumberOnes,
-  ChartData,
   findBirthdayNumberOnes,
-  getChartData,
   NoDataReason,
+  useChartData,
 } from "./ChartData";
 import BirthdayPicker from "./shared/BirthdayPicker";
-import { SpotifyAuthUrl } from "./Spotify";
 import MainLayout, { CenteredContainer } from "./shared/MainLayout";
+import { SpotifyAuthUrl } from "./Spotify";
 
 const Home = () => {
-  const [chartData, setChartData] = useState<ChartData | null>(null);
+  const chartData = useChartData();
   const [
     birthdayNumberOnes,
     setBirthdayNumberOnes,
   ] = useState<BirthdayNumberOnes | null>(null);
-  useEffect(() => {
-    const fetchData = async () => {
-      const data = await getChartData();
-      setChartData(data);
-    };
-    fetchData();
-  }, []);
 
   return (
     <MainLayout>
@@ -41,7 +33,7 @@ const Home = () => {
       />
       {birthdayNumberOnes && (
         <CenteredContainer>
-          <a href={SpotifyAuthUrl("123")} >
+          <a href={SpotifyAuthUrl("123")}>
             Connect with Spotify for more track information and the option to
             automatically create a playlist.
           </a>

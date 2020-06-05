@@ -1,5 +1,6 @@
 import { findLast } from "lodash";
 import { DateTime, Interval } from "luxon";
+import { useState, useEffect } from "react";
 
 const JsonBinUrl = "https://api.jsonbin.io/b/5ecfe1657741ef56a5638007/latest";
 
@@ -30,6 +31,18 @@ export const getChartData: () => Promise<ChartData> = () =>
         weeksAtNumberOne: Number(entry.weeks_at_number_one),
       }))
     );
+
+export const useChartData = () => {
+  const [chartData, setChartData] = useState<ChartData | null>(null);
+  useEffect(() => {
+    const fetchData = async () => {
+      const data = await getChartData();
+      setChartData(data);
+    };
+    fetchData();
+  }, []);
+  return chartData;
+};
 
 export type BirthdayNumberOnes = Array<Birthday>;
 
