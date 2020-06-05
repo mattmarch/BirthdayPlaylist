@@ -1,20 +1,20 @@
 import React from "react";
 import "react-datepicker/dist/react-datepicker.css";
+import { HashRouter, Route, Switch } from "react-router-dom";
 import Home from "./Home";
-import { BrowserRouter as Router, Route, Switch } from "react-router-dom";
 import SpotifyLoggedIn from "./SpotifyLoggedIn";
 
 const App = () => (
-  <Router>
+  <HashRouter>
     <Switch>
-      <Route path="/spotify-callback">
+      <Route path="/:access_token">
         <SpotifyLoggedIn/>
       </Route>
       <Route path="/">
         <Home />
       </Route>
     </Switch>
-  </Router>
+  </HashRouter>
 );
 
 export default App;

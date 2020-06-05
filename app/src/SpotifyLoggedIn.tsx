@@ -125,7 +125,7 @@ type SuccessCallbackParams = {
 };
 
 const useSpotifyHashParams = (): SuccessCallbackParams | Error => {
-  const urlParams = new URLSearchParams(useLocation().hash.slice(1));
+  const urlParams = new URLSearchParams(useLocation().pathname.slice(1));
   const errorParam = urlParams.get("error");
   if (errorParam != null) {
     return new Error(`Spotify authorization failed, error was: ${errorParam}`);
