@@ -9,6 +9,7 @@ import {
   NoDataReason,
 } from "./ChartData";
 import BirthdayPicker from "./shared/BirthdayPicker";
+import { SpotifyAuthUrl } from "./Spotify";
 
 const Home = () => {
   const [chartData, setChartData] = useState<ChartData | null>(null);
@@ -40,7 +41,7 @@ const Home = () => {
       />
       {birthdayNumberOnes && (
         <ResultsContainer>
-          <a href="https://accounts.spotify.com/authorize?client_id=6c0a042391fa42e8ac96a5eed4306dfe&redirect_uri=http:%2F%2Flocalhost:3000%2Fspotify-callback&scope=playlist-modify-public&response_type=token&state=123">
+          <a href={SpotifyAuthUrl("123")} >
             Connect with Spotify for more track information and the option to
             automatically create a playlist.
           </a>
