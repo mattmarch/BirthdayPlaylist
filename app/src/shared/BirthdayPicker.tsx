@@ -9,7 +9,9 @@ type Props = {
 };
 
 const BirthdayPicker = (props: Props) => {
-  const [birthdayDate, setBirthdayDate] = useState(props.selectedDate ? props.selectedDate : new Date());
+  const [birthdayDate, setBirthdayDate] = useState(
+    props.selectedDate ? props.selectedDate : new Date()
+  );
 
   return (
     <Container>
@@ -41,9 +43,9 @@ const SubmitButton = styled.button`
 `;
 
 const Container = styled.div`
-    display: flex;
-    flex-direction: column;
-    padding: 20px;
-`
+  display: flex;
+  flex-direction: column;
+  padding: 20px;
+`;
 
 export default BirthdayPicker;

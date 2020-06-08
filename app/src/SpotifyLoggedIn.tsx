@@ -101,7 +101,8 @@ const TrackSpotifyDetails = (props: { track: SpotifyTrack }) => (
       alt={`${props.track.album.name} cover`}
     />
     <p>
-      {props.track.name}<br/>
+      {props.track.name}
+      <br />
       {props.track.artists.map((artist) => artist.name).join(", ")}
     </p>
   </SpotifyTrackInfo>

@@ -8,7 +8,7 @@ const App = () => (
   <HashRouter>
     <Switch>
       <Route path="/:access_token">
-        <SpotifyLoggedIn/>
+        <SpotifyLoggedIn />
       </Route>
       <Route path="/">
         <Home />
@@ -18,4 +18,3 @@ const App = () => (
 );
 
 export default App;
-
