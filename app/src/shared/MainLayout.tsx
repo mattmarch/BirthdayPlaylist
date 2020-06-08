@@ -8,7 +8,8 @@ const MainLayout: FunctionComponent = (props) => (
       Generate a Spotify playlist of UK number ones on your Birthday since you
       were born. This site is a work in progress.
     </p>
-    {props.children}
+    <MainContent>{props.children}</MainContent>
+    <Footer />
   </PaddedCenteredContainer>
 );
 
@@ -21,5 +22,27 @@ export const CenteredContainer = styled.div`
 export const PaddedCenteredContainer = styled(CenteredContainer)`
   padding: 20px;
 `;
+
+const MainContent = styled(CenteredContainer)`
+  flex-grow: 1;
+`;
+
+const FooterContainer = styled.div`
+  text-align: center;
+  width: 80%;
+`;
+
+const Footer = () => (
+  <FooterContainer>
+    <hr />
+    <p>
+      © 2020 <a href="https://mattmarch.co.uk">Matt March</a>
+    </p>
+    <p>
+      Check out this project on{" "}
+      <a href="https://github.com/mattmarch/BirthdayPlaylist">Github</a>
+    </p>
+  </FooterContainer>
+);
 
 export default MainLayout;
