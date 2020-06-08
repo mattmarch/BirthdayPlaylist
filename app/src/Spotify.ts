@@ -109,6 +109,7 @@ type SpotifyUser = {
 
 type SpotifyPlaylist = {
   id: string;
+  external_urls: { spotify: string };
 };
 
 export const createPlaylist = async (
@@ -144,4 +145,5 @@ export const createPlaylist = async (
     },
     body: JSON.stringify({ uris: trackUris }),
   });
+  return playlist.external_urls.spotify
 };

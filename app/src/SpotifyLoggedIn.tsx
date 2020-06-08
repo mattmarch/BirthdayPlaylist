@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { useLocation } from "react-router-dom";
 import styled from "styled-components";
 import { ChartEntry, NoDataReason, useChartData } from "./ChartData";
@@ -107,17 +107,32 @@ const CreatePlaylistDisplay = (props: {
   numberOnes: Array<BirthdayWithSpotifyData>;
   birthdayDate: Date;
   token: string;
-}) => (
-  <div>
-    <button
-      onClick={() =>
-        createPlaylist(`Birthday Playlist (${props.birthdayDate.toLocaleDateString()})`, props.numberOnes, props.token)
-      }
-    >
-      Create playlist on Spotify
-    </button>
-  </div>
-);
+}) => {
+  const [loading, setLoading] = useState(false);
+  const [playlistUrl, setPlaylistUrl] = useState<string | null>(null);
+  useEffect(() => setPlaylistUrl(null), [props.birthdayDate])
+  const onCreatePlaylist = async () => {
+    setLoading(true);
+    const url = await createPlaylist(
+      `Birthday Playlist (${props.birthdayDate.toLocaleDateString()})`,
+      props.numberOnes,
+      props.token
+    );
+    setLoading(false);
+    setPlaylistUrl(url);
+  };
+  return (
+    <div>
+      {loading ? (
+        <p>Creating playlist on Spotify...</p>
+      ) : !playlistUrl ? (
+        <button onClick={onCreatePlaylist}>Create playlist on Spotify</button>
+      ) : (
+        <a href={playlistUrl}>Checkout your Birthday Playlist on Spotify</a>
+      )}
+    </div>
+  );
+};
 
 const Result = styled.div`
   text-align: center;
