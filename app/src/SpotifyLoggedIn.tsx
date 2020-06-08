@@ -12,6 +12,23 @@ import {
   createPlaylist,
 } from "./Spotify";
 
+const useSpotifyHashParams = (): SuccessCallbackParams | Error => {
+  const urlParams = new URLSearchParams(useLocation().pathname.slice(1));
+  const errorParam = urlParams.get("error");
+  if (errorParam != null) {
+    return new Error(`Spotify authorization failed, error was: ${errorParam}`);
+  }
+  const accessToken = urlParams.get("access_token");
+  const expiresIn = Number(urlParams.get("expires_in"));
+  const state = urlParams.get("state");
+  return accessToken != null && expiresIn > 0 && state != null
+    ? {
+        accessToken,
+        state,
+      }
+    : new Error("Response from Spotify was missing key return parameters");
+};
+
 const SpotifyLoggedIn = () => {
   const hashParams = useSpotifyHashParams();
   return (
@@ -53,7 +70,6 @@ const NumberOnesDisplay = (props: {
   return (
     <CenteredContainer>
       <p>You are now logged in with Spotify.</p>
-      <p>The ability to generate a playlist is coming soon!</p>
       <BirthdayPicker
         selectedDate={selectedDate}
         disabled={chartData == null}
@@ -64,6 +80,7 @@ const NumberOnesDisplay = (props: {
       ) : (
         <SpotifyTrackData
           numberOnes={spotifyData}
+          birthdayDate={selectedDate}
           token={props.callbackParams.accessToken}
         />
       )}
@@ -73,10 +90,41 @@ const NumberOnesDisplay = (props: {
 
 const SpotifyTrackData = (props: {
   numberOnes: Array<BirthdayWithSpotifyData>;
+  birthdayDate: Date;
   token: string;
 }) => (
   <CenteredContainer>
-    <CreatePlaylistDisplay numberOnes={props.numberOnes} token={props.token} />
+    <CreatePlaylistDisplay
+      numberOnes={props.numberOnes}
+      birthdayDate={props.birthdayDate}
+      token={props.token}
+    />
+    <TrackList numberOnes={props.numberOnes} />
+  </CenteredContainer>
+);
+
+const CreatePlaylistDisplay = (props: {
+  numberOnes: Array<BirthdayWithSpotifyData>;
+  birthdayDate: Date;
+  token: string;
+}) => (
+  <div>
+    <button
+      onClick={() =>
+        createPlaylist(`Birthday Playlist (${props.birthdayDate.toLocaleDateString()})`, props.numberOnes, props.token)
+      }
+    >
+      Create playlist on Spotify
+    </button>
+  </div>
+);
+
+const Result = styled.div`
+  text-align: center;
+`;
+
+const TrackList = (props: { numberOnes: Array<BirthdayWithSpotifyData> }) => (
+  <div>
     {props.numberOnes.map((birthdayEntry) => (
       <Result key={birthdayEntry.birthday.date.toLocaleString()}>
         <h4>{birthdayEntry.birthday.date.toLocaleString()}</h4>
@@ -93,27 +141,8 @@ const SpotifyTrackData = (props: {
         )}
       </Result>
     ))}
-  </CenteredContainer>
-);
-
-const CreatePlaylistDisplay = (props: {
-  numberOnes: Array<BirthdayWithSpotifyData>;
-  token: string;
-}) => (
-  <div>
-    <button
-      onClick={() =>
-        createPlaylist("Birthday Playlist", props.numberOnes, props.token)
-      }
-    >
-      Create playlist on Spotify
-    </button>
   </div>
 );
-
-const Result = styled.div`
-  text-align: center;
-`;
 
 const TrackSpotifyDetails = (props: { track: SpotifyTrack }) => (
   <SpotifyTrackInfo>
@@ -144,23 +173,6 @@ const CouldNotFindTrack = (props: { track: ChartEntry }) => (
 type SuccessCallbackParams = {
   accessToken: string;
   state: string;
-};
-
-const useSpotifyHashParams = (): SuccessCallbackParams | Error => {
-  const urlParams = new URLSearchParams(useLocation().pathname.slice(1));
-  const errorParam = urlParams.get("error");
-  if (errorParam != null) {
-    return new Error(`Spotify authorization failed, error was: ${errorParam}`);
-  }
-  const accessToken = urlParams.get("access_token");
-  const expiresIn = Number(urlParams.get("expires_in"));
-  const state = urlParams.get("state");
-  return accessToken != null && expiresIn > 0 && state != null
-    ? {
-        accessToken,
-        state,
-      }
-    : new Error("Response from Spotify was missing key return parameters");
 };
 
 export default SpotifyLoggedIn;
