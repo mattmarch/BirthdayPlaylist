@@ -9,6 +9,7 @@ import {
   SpotifyAuthUrl,
   SpotifyTrack,
   useSpotifyData,
+  createPlaylist,
 } from "./Spotify";
 
 const SpotifyLoggedIn = () => {
@@ -61,16 +62,21 @@ const NumberOnesDisplay = (props: {
       {spotifyData == null ? (
         <p>Loading data from Spotify...</p>
       ) : (
-        <NumberOnesList numberOnes={spotifyData} />
+        <SpotifyTrackData
+          numberOnes={spotifyData}
+          token={props.callbackParams.accessToken}
+        />
       )}
     </CenteredContainer>
   );
 };
 
-const NumberOnesList = (props: {
+const SpotifyTrackData = (props: {
   numberOnes: Array<BirthdayWithSpotifyData>;
+  token: string;
 }) => (
-  <div>
+  <CenteredContainer>
+    <CreatePlaylistDisplay numberOnes={props.numberOnes} token={props.token} />
     {props.numberOnes.map((birthdayEntry) => (
       <Result key={birthdayEntry.birthday.date.toLocaleString()}>
         <h4>{birthdayEntry.birthday.date.toLocaleString()}</h4>
@@ -87,6 +93,21 @@ const NumberOnesList = (props: {
         )}
       </Result>
     ))}
+  </CenteredContainer>
+);
+
+const CreatePlaylistDisplay = (props: {
+  numberOnes: Array<BirthdayWithSpotifyData>;
+  token: string;
+}) => (
+  <div>
+    <button
+      onClick={() =>
+        createPlaylist("Birthday Playlist", props.numberOnes, props.token)
+      }
+    >
+      Create playlist on Spotify
+    </button>
   </div>
 );
 

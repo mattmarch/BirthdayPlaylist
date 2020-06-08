@@ -1,5 +1,6 @@
 import { useEffect, useState } from "react";
 import { Birthday, ChartData, findBirthdayNumberOnes } from "./ChartData";
+import { compact } from "lodash";
 
 export const SpotifyAuthUrl = (state: string) => {
   const callbackUrl = window.location.origin;
@@ -7,7 +8,12 @@ export const SpotifyAuthUrl = (state: string) => {
 };
 
 const SpotifyApiBaseUrl = "https://api.spotify.com/v1";
-const SpotifySearchUrl = new URL(`${SpotifyApiBaseUrl}/search`);
+const SpotifySearchUrl = `${SpotifyApiBaseUrl}/search`;
+const SpotifyProfileUrl = `${SpotifyApiBaseUrl}/me`;
+const SpotifyPlaylistCreateUrl = (userId: string) =>
+  `${SpotifyApiBaseUrl}/users/${userId}/playlists`;
+const SpotifyPlaylistAddTracksUrl = (playlistId: string) =>
+  `${SpotifyApiBaseUrl}/playlists/${playlistId}/tracks`;
 
 export type SpotifyTrack = {
   album: SpotifyAlbum;
@@ -95,4 +101,47 @@ export const useSpotifyData = (
     fetchData();
   }, [chartData, selectedDate, token]);
   return spotifyData;
+};
+
+type SpotifyUser = {
+  id: string;
+};
+
+type SpotifyPlaylist = {
+  id: string;
+};
+
+export const createPlaylist = async (
+  playlistName: string,
+  birthdays: Array<BirthdayWithSpotifyData>,
+  token: string
+) => {
+  const user: SpotifyUser = await fetch(SpotifyProfileUrl, {
+    headers: { Authorization: `Bearer ${token}` },
+  }).then((response) => response.json());
+  const playlistDetails = {
+    name: playlistName,
+    description:
+      "Playlist of Birthday UK Number One singles created via https://playlist.mattmarch.co.uk",
+  };
+  const playlist: SpotifyPlaylist = await fetch(
+    SpotifyPlaylistCreateUrl(user.id),
+    {
+      method: "POST",
+      headers: {
+        Authorization: `Bearer ${token}`,
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify(playlistDetails),
+    }
+  ).then((response) => response.json());
+  const trackUris = compact(birthdays.map((b) => b.spotifyTrack?.uri));
+  await fetch(SpotifyPlaylistAddTracksUrl(playlist.id), {
+    method: "POST",
+    headers: {
+      Authorization: `Bearer ${token}`,
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify({ uris: trackUris }),
+  });
 };
