@@ -110,7 +110,7 @@ const CreatePlaylistDisplay = (props: {
 }) => {
   const [loading, setLoading] = useState(false);
   const [playlistUrl, setPlaylistUrl] = useState<string | null>(null);
-  useEffect(() => setPlaylistUrl(null), [props.birthdayDate])
+  useEffect(() => setPlaylistUrl(null), [props.birthdayDate]);
   const onCreatePlaylist = async () => {
     setLoading(true);
     const url = await createPlaylist(

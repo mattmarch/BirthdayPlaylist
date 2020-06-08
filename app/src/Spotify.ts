@@ -145,5 +145,5 @@ export const createPlaylist = async (
     },
     body: JSON.stringify({ uris: trackUris }),
   });
-  return playlist.external_urls.spotify
+  return playlist.external_urls.spotify;
 };
