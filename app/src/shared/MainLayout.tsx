@@ -8,6 +8,14 @@ const MainLayout: FunctionComponent = (props) => (
       Generate a Spotify playlist of UK number ones on your Birthday since you
       were born. This site is a work in progress.
     </p>
+    <p>
+      Historical data is consistent with{" "}
+      <a href="https://en.wikipedia.org/wiki/Lists_of_UK_Singles_Chart_number_ones">
+        this Wikipedia page
+      </a>{" "}
+      (as of 9th June 2020), and new entries will be updated on day of chart
+      release.
+    </p>
     <MainContent>{props.children}</MainContent>
     <Footer />
   </PaddedCenteredContainer>
