@@ -16,7 +16,7 @@ const BirthdayPicker = (props: Props) => {
   return (
     <Container>
       <h3>Enter your birthday below:</h3>
-      <DatePicker
+      <CenteredDatePicker
         selected={birthdayDate}
         onChange={(date) =>
           date ? setBirthdayDate(date) : setBirthdayDate(new Date())
@@ -37,6 +37,10 @@ const BirthdayPicker = (props: Props) => {
     </Container>
   );
 };
+
+const CenteredDatePicker = styled(DatePicker)`
+  text-align: center;
+`
 
 const SubmitButton = styled.button`
   margin: 10px;
