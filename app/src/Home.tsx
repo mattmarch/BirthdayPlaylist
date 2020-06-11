@@ -13,7 +13,7 @@ import { SpotifyAuthUrl } from "./Spotify";
 
 const Home = () => {
   const [selectedDate, setSelectedDate] = useState<Date | null>(null);
-  const chartData = useChartData();
+  const { chartData, errorMessage } = useChartData();
   const birthdayNumberOnes =
     chartData != null && selectedDate != null
       ? findBirthdayNumberOnes(selectedDate, chartData)
@@ -21,25 +21,34 @@ const Home = () => {
 
   return (
     <MainLayout>
-      <BirthdayPicker
-        disabled={chartData == null}
-        onDateSelect={setSelectedDate}
-      />
-      {birthdayNumberOnes && selectedDate && (
+      {errorMessage != null ? (
         <CenteredContainer>
-          <a href={SpotifyAuthUrl(selectedDate.toISOString())}>
-            Connect with Spotify for more track information and the option to
-            automatically create a playlist.
-          </a>
-          <NumberOnesList birthdayNumberOnes={birthdayNumberOnes} />
+          <h3>Sorry! Something went wrong! :(</h3>
+          <p>{errorMessage}</p>
         </CenteredContainer>
+      ) : (
+        <>
+          <BirthdayPicker
+            disabled={chartData == null}
+            onDateSelect={setSelectedDate}
+          />
+          {birthdayNumberOnes && selectedDate && (
+            <CenteredContainer>
+              <a href={SpotifyAuthUrl(selectedDate.toISOString())}>
+                Connect with Spotify for more track information and the option
+                to automatically create a playlist.
+              </a>
+              <NumberOnesList birthdayNumberOnes={birthdayNumberOnes} />
+            </CenteredContainer>
+          )}
+        </>
       )}
     </MainLayout>
   );
 };
 
 const NumberOnesList = (props: { birthdayNumberOnes: BirthdayNumberOnes }) => (
-  <div>
+  <>
     {props.birthdayNumberOnes.map((birthdayEntry) => (
       <Result key={birthdayEntry.date.toLocaleString()}>
         <h4>{birthdayEntry.date.toLocaleString()}</h4>
@@ -54,7 +63,7 @@ const NumberOnesList = (props: { birthdayNumberOnes: BirthdayNumberOnes }) => (
         )}
       </Result>
     ))}
-  </div>
+  </>
 );
 
 const Result = styled.div`

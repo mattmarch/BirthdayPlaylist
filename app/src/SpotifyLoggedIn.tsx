@@ -61,7 +61,7 @@ const NumberOnesDisplay = (props: {
   const [selectedDate, setSelectedDate] = useState(
     new Date(props.callbackParams.state)
   );
-  const chartData = useChartData();
+  const {chartData, errorMessage} = useChartData();
   const spotifyData = useSpotifyData(
     chartData,
     selectedDate,

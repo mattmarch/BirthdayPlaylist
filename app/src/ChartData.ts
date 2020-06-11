@@ -20,28 +20,32 @@ export interface ChartEntry {
 
 export type ChartData = Array<ChartEntry>;
 
-export const getChartData: () => Promise<ChartData> = () =>
-  fetch(JsonBinUrl)
-    .then((response) => response.json())
-    .then((incomingEntries) =>
-      incomingEntries.map((entry: IncomingChartEntry) => ({
-        firstWeekEndDate: DateTime.fromISO(entry.first_week_ending_date),
-        title: entry.title,
-        artist: entry.artist,
-        weeksAtNumberOne: Number(entry.weeks_at_number_one),
-      }))
-    );
+export const getChartData: () => Promise<ChartData> = async () => {
+  const response = await fetch(JsonBinUrl);
+  const incomingEntries = await response.json();
+  return incomingEntries.map((entry: IncomingChartEntry) => ({
+    firstWeekEndDate: DateTime.fromISO(entry.first_week_ending_date),
+    title: entry.title,
+    artist: entry.artist,
+    weeksAtNumberOne: Number(entry.weeks_at_number_one),
+  }));
+};
 
 export const useChartData = () => {
   const [chartData, setChartData] = useState<ChartData | null>(null);
+  const [errorMessage, setErrorMessage] = useState<string | null>(null);
   useEffect(() => {
     const fetchData = async () => {
-      const data = await getChartData();
-      setChartData(data);
+      try {
+        const data = await getChartData();
+        setChartData(data);
+      } catch (error) {
+        setErrorMessage(`Failed to load chart data from API`)
+      }
     };
     fetchData();
   }, []);
-  return chartData;
+  return {chartData, errorMessage};
 };
 
 export type BirthdayNumberOnes = Array<Birthday>;
