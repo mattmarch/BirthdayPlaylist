@@ -1,58 +1,111 @@
-import React from "react";
+import React, { useState } from "react";
 import { useLocation } from "react-router-dom";
 import MainLayout, { CenteredContainer } from "./shared/MainLayout";
 import { SpotifyAuthUrl } from "./Spotify";
 import { NumberOnesDisplay } from "./SpotifyTrackList";
 
-const useSpotifyHashParams = (): SuccessCallbackParams | Error => {
-  const urlParams = new URLSearchParams(useLocation().pathname.slice(1));
-  const errorParam = urlParams.get("error");
-  if (errorParam != null) {
-    return new Error(`Spotify authorization failed, error was: ${errorParam}`);
-  }
-  const accessToken = urlParams.get("access_token");
-  const expiresIn = Number(urlParams.get("expires_in"));
-  const state = urlParams.get("state");
-  return accessToken != null && expiresIn > 0 && state != null
-    ? {
-        accessToken,
-        state,
-      }
-    : new Error("Response from Spotify was missing key return parameters");
-};
-
 const SpotifyLoggedIn = () => {
-  const hashParams = useSpotifyHashParams();
+  const [error, setError] = useState<ErrorToDisplay | null>(null);
+  const urlParams = getUrlHashParams(useLocation().pathname);
+  if (isErrorParams(urlParams)) {
+    return (
+      <MainLayout>
+        <ErrorDisplay
+          error={{
+            message: urlParams.error,
+            isSpotifyAuthError: true,
+          }}
+          state={urlParams.state}
+        />{" "}
+      </MainLayout>
+    );
+  }
   return (
     <MainLayout>
-      {hashParams instanceof Error ? (
-        <ErrorDisplay error={hashParams} />
+      {error ? (
+        <ErrorDisplay error={error} state={urlParams.state} />
       ) : (
         <NumberOnesDisplay
-          accessToken={hashParams.accessToken}
-          state={hashParams.state}
+          accessToken={urlParams.accessToken}
+          state={urlParams.state}
+          onError={(message, isSpotifyError) =>
+            setError({ message: message, isSpotifyAuthError: isSpotifyError })
+          }
         />
       )}
     </MainLayout>
   );
 };
 
-const ErrorDisplay = (props: { error: Error }) => (
+type ErrorToDisplay = {
+  message: string;
+  isSpotifyAuthError: boolean;
+};
+
+const ErrorDisplay = (props: {
+  error: ErrorToDisplay;
+  state: string | null;
+}) => (
   <CenteredContainer>
-    <h3>Error</h3>
-    <p>An error occurred during authorization with spotify.</p>
-    <a href={SpotifyAuthUrl(new Date().toISOString())}>Click to try again.</a>
+    <h3>Sorry! Something went wrong! :(</h3>
+    {props.error.isSpotifyAuthError && (
+      <>
+        <p>An error occurred during authorization with spotify.</p>
+        <a
+          href={SpotifyAuthUrl(
+            props.state ? props.state : new Date().toISOString()
+          )}
+        >
+          Click to try again.
+        </a>
+      </>
+    )}
+    <p>{props.error.message}</p>
     <p>
       If this problem persists{" "}
       <a href="mailto:playlist@mattmarch.co.uk">let me know</a>.
     </p>
-    <p>Error reason: {props.error.message}</p>
   </CenteredContainer>
 );
 
-type SuccessCallbackParams = {
+const getUrlHashParams = (
+  pathname: string
+): SuccessCallbackParams | ErrorCallbackParams => {
+  const urlParams = new URLSearchParams(pathname.slice(1));
+  const stateParam = urlParams.get("state");
+  const errorParam = urlParams.get("error");
+  const tokenParam = urlParams.get("access_token");
+
+  if (errorParam != null) {
+    return {
+      error: `Error authorizing with Spotify. Message was "${errorParam}"`,
+      state: stateParam,
+    };
+  }
+  if (stateParam == null || tokenParam == null) {
+    return {
+      error: "Callback from Spotify was missing key return parameters",
+      state: null,
+    };
+  }
+  return {
+    accessToken: tokenParam,
+    state: stateParam,
+  };
+};
+
+interface SuccessCallbackParams {
   accessToken: string;
   state: string;
-};
+}
+
+interface ErrorCallbackParams {
+  error: string;
+  state: string | null;
+}
+
+const isErrorParams = (
+  params: SuccessCallbackParams | ErrorCallbackParams
+): params is ErrorCallbackParams => "error" in params;
 
 export default SpotifyLoggedIn;

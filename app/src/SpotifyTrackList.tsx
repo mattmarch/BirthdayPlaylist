@@ -13,6 +13,7 @@ import styled from "styled-components";
 type Props = {
   accessToken: string;
   state: string;
+  onError: (message: string, isSpotifyError: boolean) => void;
 };
 
 export const NumberOnesDisplay = (props: Props) => {
@@ -23,6 +24,9 @@ export const NumberOnesDisplay = (props: Props) => {
     selectedDate,
     props.accessToken
   );
+  if (errorMessage != null) {
+    props.onError(errorMessage, false)
+  }
   return (
     <CenteredContainer>
       <p>You are now logged in with Spotify.</p>
