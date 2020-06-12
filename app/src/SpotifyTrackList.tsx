@@ -1,14 +1,14 @@
-import React, { useState, useEffect } from "react";
-import { useChartData, NoDataReason, ChartEntry } from "./ChartData";
-import {
-  useSpotifyData,
-  BirthdayWithSpotifyData,
-  createPlaylist,
-  SpotifyTrack,
-} from "./Spotify";
-import { CenteredContainer } from "./shared/MainLayout";
-import BirthdayPicker from "./shared/BirthdayPicker";
+import React, { useState } from "react";
 import styled from "styled-components";
+import { ChartEntry, NoDataReason, useChartData } from "./ChartData";
+import { CreatePlaylistButton } from "./CreatePlaylistButton";
+import BirthdayPicker from "./shared/BirthdayPicker";
+import { CenteredContainer } from "./shared/MainLayout";
+import {
+  BirthdayWithSpotifyData,
+
+  SpotifyTrack, useSpotifyData
+} from "./Spotify";
 
 type Props = {
   accessToken: string;
@@ -57,7 +57,7 @@ const SpotifyTrackData = (props: {
   token: string;
 }) => (
   <CenteredContainer>
-    <CreatePlaylistDisplay
+    <CreatePlaylistButton
       numberOnes={props.numberOnes}
       birthdayDate={props.birthdayDate}
       token={props.token}
@@ -65,37 +65,6 @@ const SpotifyTrackData = (props: {
     <TrackList numberOnes={props.numberOnes} />
   </CenteredContainer>
 );
-
-const CreatePlaylistDisplay = (props: {
-  numberOnes: Array<BirthdayWithSpotifyData>;
-  birthdayDate: Date;
-  token: string;
-}) => {
-  const [loading, setLoading] = useState(false);
-  const [playlistUrl, setPlaylistUrl] = useState<string | null>(null);
-  useEffect(() => setPlaylistUrl(null), [props.birthdayDate]);
-  const onCreatePlaylist = async () => {
-    setLoading(true);
-    const url = await createPlaylist(
-      `Birthday Playlist (${props.birthdayDate.toLocaleDateString()})`,
-      props.numberOnes,
-      props.token
-    );
-    setLoading(false);
-    setPlaylistUrl(url);
-  };
-  return (
-    <div>
-      {loading ? (
-        <p>Creating playlist on Spotify...</p>
-      ) : !playlistUrl ? (
-        <button onClick={onCreatePlaylist}>Create playlist on Spotify</button>
-      ) : (
-        <a href={playlistUrl}>Checkout your Birthday Playlist on Spotify</a>
-      )}
-    </div>
-  );
-};
 
 const Result = styled.div`
   text-align: center;
