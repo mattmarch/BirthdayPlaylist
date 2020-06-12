@@ -19,13 +19,16 @@ type Props = {
 export const NumberOnesDisplay = (props: Props) => {
   const [selectedDate, setSelectedDate] = useState(new Date(props.state));
   const { chartData, errorMessage } = useChartData();
-  const spotifyData = useSpotifyData(
+  const {spotifyData, errorMessage: spotifyErrorMessage} = useSpotifyData(
     chartData,
     selectedDate,
     props.accessToken
   );
   if (errorMessage != null) {
     props.onError(errorMessage, false)
+  }
+  if (spotifyErrorMessage != null) {
+    props.onError(spotifyErrorMessage, true)
   }
   return (
     <CenteredContainer>

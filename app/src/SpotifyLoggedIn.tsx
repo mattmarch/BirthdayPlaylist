@@ -50,7 +50,7 @@ const ErrorDisplay = (props: {
     <h3>Sorry! Something went wrong! :(</h3>
     {props.error.isSpotifyAuthError && (
       <>
-        <p>An error occurred during authorization with spotify.</p>
+        <p>An error occurred during communication with spotify.</p>
         <a
           href={SpotifyAuthUrl(
             props.state ? props.state : new Date().toISOString()

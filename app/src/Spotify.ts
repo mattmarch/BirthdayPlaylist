@@ -73,6 +73,7 @@ export const useSpotifyData = (
   const [spotifyData, setSpotifyData] = useState<Array<
     BirthdayWithSpotifyData
   > | null>(null);
+  const [errorMessage, setErrorMessage] = useState<string | null>(null);
 
   useEffect(() => {
     if (chartData == null) {
@@ -80,28 +81,34 @@ export const useSpotifyData = (
     }
     const birthdayNumberOnes = findBirthdayNumberOnes(selectedDate, chartData);
     const fetchData = async () => {
-      const entries: Array<Promise<
-        BirthdayWithSpotifyData
-      >> = birthdayNumberOnes.map(async (birthdayEntry) => {
-        if (birthdayEntry.numberOne == null) {
-          return Promise.resolve({
-            birthday: birthdayEntry,
-            spotifyTrack: null,
-          });
-        }
-        const track = await searchTrack(
-          birthdayEntry.numberOne.title,
-          birthdayEntry.numberOne.artist,
-          token
+      try {
+        const entries: Array<Promise<
+          BirthdayWithSpotifyData
+        >> = birthdayNumberOnes.map(async (birthdayEntry) => {
+          if (birthdayEntry.numberOne == null) {
+            return Promise.resolve({
+              birthday: birthdayEntry,
+              spotifyTrack: null,
+            });
+          }
+          const track = await searchTrack(
+            birthdayEntry.numberOne.title,
+            birthdayEntry.numberOne.artist,
+            token
+          );
+          return { birthday: birthdayEntry, spotifyTrack: track };
+        });
+        const data = await Promise.all(entries);
+        setSpotifyData(data);
+      } catch (error) {
+        setErrorMessage(
+          `Error retrieving data from spotify, message was "${error.message}"`
         );
-        return { birthday: birthdayEntry, spotifyTrack: track };
-      });
-      const data = await Promise.all(entries);
-      setSpotifyData(data);
+      }
     };
     fetchData();
   }, [chartData, selectedDate, token]);
-  return spotifyData;
+  return { spotifyData, errorMessage };
 };
 
 type SpotifyUser = {
