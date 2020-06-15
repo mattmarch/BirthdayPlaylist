@@ -10,9 +10,11 @@ import {
 import BirthdayPicker from "./shared/BirthdayPicker";
 import MainLayout, { CenteredContainer } from "./shared/MainLayout";
 import { SpotifyAuthUrl } from "./Spotify";
+import { useLocation } from "react-router-dom";
 
 const Home = () => {
-  const [selectedDate, setSelectedDate] = useState<Date | null>(null);
+  const dateFromUrl = getDateFromUrl(useLocation().pathname)
+  const [selectedDate, setSelectedDate] = useState<Date | null>(dateFromUrl);
   const { chartData, errorMessage } = useChartData();
   const birthdayNumberOnes =
     chartData != null && selectedDate != null
@@ -31,6 +33,7 @@ const Home = () => {
           <BirthdayPicker
             disabled={chartData == null}
             onDateSelect={setSelectedDate}
+            selectedDate={selectedDate}
           />
           {birthdayNumberOnes && selectedDate && (
             <CenteredContainer>
@@ -69,5 +72,11 @@ const NumberOnesList = (props: { birthdayNumberOnes: BirthdayNumberOnes }) => (
 const Result = styled.div`
   text-align: center;
 `;
+
+const getDateFromUrl = (pathname: string): Date | null => {
+  const urlParams = new URLSearchParams(pathname.slice(1));
+  const stateParam = urlParams.get("state");
+  return stateParam != null ? new Date(stateParam) : null
+}
 
 export default Home;

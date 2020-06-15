@@ -5,7 +5,7 @@ import DatePicker from "react-datepicker";
 type Props = {
   disabled: boolean;
   onDateSelect: (date: Date) => void;
-  selectedDate?: Date;
+  selectedDate: Date | null;
 };
 
 const BirthdayPicker = (props: Props) => {

@@ -7,7 +7,7 @@ import SpotifyLoggedIn from "./SpotifyLoggedIn";
 const App = () => (
   <HashRouter>
     <Switch>
-      <Route path="/:access_token">
+      <Route path={["/access_token=*", "/error=*"]}>
         <SpotifyLoggedIn />
       </Route>
       <Route path="/">
