@@ -1,13 +1,18 @@
 # Birthday Playlist Generator
 
-**This project is currently a work in progress.**
+This is an app to automatically generate a Spotify Playlist of songs which have reached UK number one on your Birthday. There are 2 parts to this project:
 
-The idea behind this app is to automatically generate a Spotify Playlist of songs which have reached UK number one on your Birthday. There are 2 parts to this project:
+### Web app
+
+This is a React app which upon entering your Birthday will provide you with a playlist of UK number ones. You have the ability to authorize with Spotify to get more track information including cover art, and a button which will generate you a Spotify playlist.
+
+![Screenshot of application](Screenshot.png)
+
+The chart data is queried from JSONBin (see the chart parser) and is filtered within the React application. Authorization with Spotify is via the Implicit Grant flow [as detailed here](https://developer.spotify.com/documentation/general/guides/authorization-guide/#implicit-grant-flow). The app can then use the access token received from Spotify to match up the tracks with tracks on Spotify (performing a separate search for each track), and displays the Spotify track name and album art in a list.
+
+The app is deployed to Github pages, via a Github action ("Github pages deploy") which is triggered on pushing changes to master which affect the app directory.
 
 ### OfficialCharts Parser
 This is a short Python script which can be run to scrape the latest chart info from [OfficialCharts](https://www.officialcharts.com/chart-news/all-the-number-1-singles__7931/). If run with a `-u` argument the data will be uploaded to [JSONBIN.io](https://jsonbin.io) to be used by the web app.
 
-### Web app
-This is a React app which allows you to enter your Birthday and it will query the data on JSONBin and find the tracks which were number one on your past birthdays. When this is displayed it will provide a link to authorize with Spotify via the Implicit Grant flow [as detailed here](https://developer.spotify.com/documentation/general/guides/authorization-guide/#implicit-grant-flow). The app can then use the access token received from Spotify to match up the tracks with tracks on Spotify, and displays the Spotify track name and album art in a list.
-
-There is then the option to automatically create a playlist on Spotify with those tracks.
+The parser is run by the "Run update data script" Github action.

@@ -6,7 +6,7 @@ const MainLayout: FunctionComponent = (props) => (
     <h1>Birthday Playlist Generator</h1>
     <p>
       Generate a Spotify playlist of UK number ones on your Birthday since you
-      were born. This site is a work in progress.
+      were born.
     </p>
     <p>
       Historical data is consistent with{" "}
