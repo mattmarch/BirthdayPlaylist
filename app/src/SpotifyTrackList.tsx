@@ -9,6 +9,7 @@ import {
 
   SpotifyTrack, useSpotifyData
 } from "./Spotify";
+import ShareLink from "./shared/ShareLink";
 
 type Props = {
   accessToken: string;
@@ -62,6 +63,7 @@ const SpotifyTrackData = (props: {
       birthdayDate={props.birthdayDate}
       token={props.token}
     />
+    <ShareLink date={props.birthdayDate} />
     <TrackList numberOnes={props.numberOnes} />
   </CenteredContainer>
 );
@@ -71,7 +73,8 @@ const Result = styled.div`
 `;
 
 const TrackList = (props: { numberOnes: Array<BirthdayWithSpotifyData> }) => (
-  <div>
+  <CenteredContainer>
+    <h2>Your playlist:</h2>
     {props.numberOnes.map((birthdayEntry) => (
       <Result key={birthdayEntry.birthday.date.toLocaleString()}>
         <h4>{birthdayEntry.birthday.date.toLocaleString()}</h4>
@@ -88,7 +91,7 @@ const TrackList = (props: { numberOnes: Array<BirthdayWithSpotifyData> }) => (
         )}
       </Result>
     ))}
-  </div>
+  </CenteredContainer>
 );
 
 const TrackSpotifyDetails = (props: { track: SpotifyTrack }) => (

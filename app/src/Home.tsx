@@ -11,6 +11,7 @@ import BirthdayPicker from "./shared/BirthdayPicker";
 import MainLayout, { CenteredContainer } from "./shared/MainLayout";
 import { SpotifyAuthUrl } from "./Spotify";
 import { useLocation } from "react-router-dom";
+import ShareLink from "./shared/ShareLink";
 
 const Home = () => {
   const dateFromUrl = getDateFromUrl(useLocation().pathname)
@@ -41,6 +42,7 @@ const Home = () => {
                 Connect with Spotify for more track information and the option
                 to automatically create a playlist.
               </a>
+              <ShareLink date={selectedDate} />
               <NumberOnesList birthdayNumberOnes={birthdayNumberOnes} />
             </CenteredContainer>
           )}
@@ -52,6 +54,7 @@ const Home = () => {
 
 const NumberOnesList = (props: { birthdayNumberOnes: BirthdayNumberOnes }) => (
   <>
+  <h2>Your Playlist</h2>
     {props.birthdayNumberOnes.map((birthdayEntry) => (
       <Result key={birthdayEntry.date.toLocaleString()}>
         <h4>{birthdayEntry.date.toLocaleString()}</h4>
