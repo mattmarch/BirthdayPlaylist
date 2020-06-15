@@ -1,10 +1,10 @@
 # Birthday Playlist Generator
 
-This is an app to automatically generate a Spotify Playlist of songs which have reached UK number one on your Birthday. There are 2 parts to this project:
+This is an app to automatically generate a Spotify playlist of songs which have reached UK number one on your past Birthdays. There are 2 parts to this project:
 
 ### Web app
 
-This is a React app which upon entering your Birthday will provide you with a playlist of UK number ones. You have the ability to authorize with Spotify to get more track information including cover art, and a button which will generate you a Spotify playlist.
+This is a React app which upon entering your Birthday will provide you with a playlist of UK number ones. You have the ability to authorize with Spotify to get more track information including cover art, and a button which will automatically turn the list into a Spotify playlist.
 
 ![Screenshot of application](Screenshot.png)
 
