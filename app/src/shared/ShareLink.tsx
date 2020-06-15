@@ -3,7 +3,7 @@ import styled from "styled-components";
 import { PaddedCenteredContainer } from "./MainLayout";
 
 const ShareLink = (props: { date: Date }) => {
-  const url = `${window.location.origin}/#/${props.date.toISOString()}`;
+  const url = `${window.location.origin}/#/state=${props.date.toISOString()}`;
   return (
     <PaddedCenteredContainer>
       <h4>Share this playlist:</h4>
