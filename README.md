@@ -1,5 +1,7 @@
 # Birthday Playlist Generator
 
+[Check out my blog post about the making of this project.](https://mattmarch.co.uk/birthday-playlist/)
+
 This is an app to automatically generate a Spotify playlist of songs which have reached UK number one on your past Birthdays. There are 2 parts to this project:
 
 ### Web app
