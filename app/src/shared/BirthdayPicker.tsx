@@ -40,6 +40,7 @@ const BirthdayPicker = (props: Props) => {
 
 const CenteredDatePicker = styled(DatePicker)`
   text-align: center;
+  width: 100%;
 `
 
 const SubmitButton = styled.button`
@@ -50,6 +51,7 @@ const Container = styled.div`
   display: flex;
   flex-direction: column;
   padding: 20px;
+  align-items: stretch;
 `;
 
 export default BirthdayPicker;
