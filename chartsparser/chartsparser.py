@@ -42,6 +42,6 @@ if __name__ == '__main__':
     if len(sys.argv) > 1 and '-u' in sys.argv[1:]:
         jsonbin_url = os.environ.get('JSONBIN_URL')
         jsonbin_key = os.environ.get('JSONBIN_KEY')
-        headers = {'Content-Type': 'application/json', 'secret-key': jsonbin_key}
+        headers = {'Content-Type': 'application/json', 'X-Master-Key': jsonbin_key}
         response = requests.put(jsonbin_url, json=entries, headers=headers)
         assert(response.status_code == 200)
