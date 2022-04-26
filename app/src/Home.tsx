@@ -12,10 +12,12 @@ import MainLayout, { CenteredContainer } from "./shared/MainLayout";
 import { SpotifyAuthUrl } from "./Spotify";
 import { useLocation } from "react-router-dom";
 import ShareLink from "./shared/ShareLink";
+import { useAuth } from 'react-oidc-context'
 
 const Home = () => {
-  const dateFromUrl = getDateFromUrl(useLocation().pathname)
-  const [selectedDate, setSelectedDate] = useState<Date | null>(dateFromUrl);
+  const auth = useAuth()
+  // const dateFromUrl = getDateFromUrl(useLocation().pathname)
+  const [selectedDate, setSelectedDate] = useState<Date | null>(null);
   const { chartData, errorMessage } = useChartData();
   const birthdayNumberOnes =
     chartData != null && selectedDate != null
@@ -38,10 +40,11 @@ const Home = () => {
           />
           {birthdayNumberOnes && selectedDate && (
             <CenteredContainer>
-              <a href={SpotifyAuthUrl(selectedDate.toISOString())}>
+              {console.log(auth)}
+              <button onClick={() => auth.signinRedirect()}>
                 Connect with Spotify for more track information and the option
                 to automatically create a playlist.
-              </a>
+              </button>
               <ShareLink date={selectedDate} />
               <NumberOnesList birthdayNumberOnes={birthdayNumberOnes} />
             </CenteredContainer>
@@ -54,7 +57,7 @@ const Home = () => {
 
 const NumberOnesList = (props: { birthdayNumberOnes: BirthdayNumberOnes }) => (
   <>
-  <h2>Your Playlist</h2>
+    <h2>Your Playlist</h2>
     {props.birthdayNumberOnes.map((birthdayEntry) => (
       <Result key={birthdayEntry.date.toLocaleString()}>
         <h4>{birthdayEntry.date.toLocaleString()}</h4>

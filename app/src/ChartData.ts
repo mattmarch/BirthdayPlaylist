@@ -45,7 +45,7 @@ export const useChartData = () => {
     };
     fetchData();
   }, []);
-  return {chartData, errorMessage};
+  return { chartData, errorMessage };
 };
 
 export type BirthdayNumberOnes = Array<Birthday>;
@@ -88,10 +88,10 @@ export const findBirthdayNumberOne = (
     chartEntryBeforeBirthday === chartData[chartData.length - 1] &&
     // and birthday is past chart start plus weeks at number one
     birthday >=
-      chartEntryBeforeBirthday.firstWeekEndDate.plus({
-        weeks: chartEntryBeforeBirthday.weeksAtNumberOne,
-        days: -6,
-      })
+    chartEntryBeforeBirthday.firstWeekEndDate.plus({
+      weeks: chartEntryBeforeBirthday.weeksAtNumberOne,
+      days: -6,
+    })
   ) {
     return {
       date: birthday,
