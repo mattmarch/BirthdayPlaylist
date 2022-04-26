@@ -18,7 +18,7 @@ const BirthdayPicker = (props: Props) => {
       <h3>Enter your birthday below:</h3>
       <CenteredDatePicker
         selected={birthdayDate}
-        onChange={(date) =>
+        onChange={(date: Date) =>
           date ? setBirthdayDate(date) : setBirthdayDate(new Date())
         }
         dateFormat="dd/MM/yyyy"
