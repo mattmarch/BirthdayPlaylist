@@ -1,6 +1,6 @@
 # Birthday Playlist Generator
 
-> ![IMPORTANT]
+> [!IMPORTANT]
 > This project has not worked for a while due to breaking changes with JSON Bin and the Spotify API upon which it depends.
 >
 > I am in the process of rewriting this app in Svelte, see here: https://github.com/mattmarch/birthday-playlist
