@@ -1,5 +1,10 @@
 # Birthday Playlist Generator
 
+> ![IMPORTANT]
+> This project has not worked for a while due to breaking changes with JSON Bin and the Spotify API upon which it depends.
+>
+> I am in the process of rewriting this app in Svelte, see here: https://github.com/mattmarch/birthday-playlist
+
 [Check out my blog post about the making of this project.](https://mattmarch.co.uk/birthday-playlist/)
 
 This is an app to automatically generate a Spotify playlist of songs which have reached UK number one on your past Birthdays. There are 2 parts to this project:
@@ -15,6 +20,7 @@ The chart data is queried from JSONBin (see the chart parser) and is filtered wi
 The app is deployed to Github pages, via a Github action ("Github pages deploy") which is triggered on pushing changes to master which affect the app directory.
 
 ### OfficialCharts Parser
+
 This is a short Python script which can be run to scrape the latest chart info from [OfficialCharts](https://www.officialcharts.com/chart-news/all-the-number-1-singles__7931/). If run with a `-u` argument the data will be uploaded to [JSONBIN.io](https://jsonbin.io) to be used by the web app.
 
 The parser is run by the "Run update data script" Github action.
